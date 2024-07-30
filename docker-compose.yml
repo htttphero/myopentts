@@ -1,0 +1,9 @@
+version: "3"
+
+services:
+  opentts:
+    build: .
+    ports:
+      - "5500:5500"
+    volumes:
+      - ./templates:/app/templates
