@@ -301,19 +301,6 @@ app = quart_cors.cors(app)
 # -----------------------------------------------------------------------------
 
 
-# -----------------------------------------------------------------------------ip sestrict start serg
-
-ALLOWED_IPS = {'192.168.1.1', '31.135.179.30'}  # Replace with your allowed IPs
-
-def restrict_ip(f):
-    def wrapper(*args, **kwargs):
-        client_ip = request.remote_addr
-        if client_ip not in ALLOWED_IPS:
-            abort(403)  # Forbidden
-        return f(*args, **kwargs)
-    return wrapper
-# -----------------------------------------------------------------------------ip sestrict end serg
-
 
 async def text_to_wav(
     text: str,
@@ -618,7 +605,6 @@ def make_silence_wav(
 
 
 @app.route("/api/voices")
-@restrict_ip
 async def app_voices() -> Response:
     """Get available voices."""
     languages = set(request.args.getlist("language"))
@@ -656,7 +642,6 @@ async def app_voices() -> Response:
 
 
 @app.route("/api/languages")
-@restrict_ip
 async def app_languages() -> Response:
     """Get available languages."""
     tts_names = set(request.args.getlist("tts_name"))
@@ -679,7 +664,6 @@ def convert_bool(bool_str: str) -> bool:
 
 
 @app.route("/api/tts", methods=["GET", "POST"])
-@restrict_ip
 async def app_say() -> Response:
     """Speak text to WAV."""
     lang = request.args.get("lang", "en")
@@ -789,7 +773,6 @@ def resolve_voice(voice: str, fallback_voice: typing.Optional[str] = None) -> st
 
 # MaryTTS compatibility layer
 @app.route("/process", methods=["GET", "POST"])
-@restrict_ip
 async def api_process():
     """MaryTTS-compatible /process endpoint"""
     if request.method == "POST":
@@ -818,7 +801,6 @@ async def api_process():
 
 
 @app.route("/voices", methods=["GET"])
-@restrict_ip
 async def api_voices():
     """MaryTTS-compatible /voices endpoint"""
     voices = []
