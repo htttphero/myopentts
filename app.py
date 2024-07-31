@@ -821,15 +821,15 @@ async def api_version():
 # -----------------------------------------------------------------------------
 
 
-@app.route("/")
-async def app_index():
-    """Test page."""
-    return await render_template(
-        "index.html",
-        default_language=_DEFAULT_LANGUAGE,
-        cache=args.cache,
-        preferred_voices=_VOICE_ALIASES.get(_DEFAULT_LANGUAGE, []),
-    )
+#@app.route("/")
+#async def app_index():
+#    """Test page."""
+#    return await render_template(
+#        "index.html",
+#        default_language=_DEFAULT_LANGUAGE,
+#       cache=args.cache,
+#        preferred_voices=_VOICE_ALIASES.get(_DEFAULT_LANGUAGE, []),
+#    )
 
 
 @app.route("/css/<path:filename>", methods=["GET"])
@@ -851,7 +851,7 @@ async def img(filename) -> Response:
 
 
 # Swagger UI
-api_doc(app, config_path="swagger.yaml", url_prefix="/openapi", title="OpenTTS")
+#api_doc(app, config_path="swagger.yaml", url_prefix="/openapi", title="OpenTTS")
 
 
 @app.errorhandler(Exception)
