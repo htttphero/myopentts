@@ -604,58 +604,58 @@ def make_silence_wav(
 # -----------------------------------------------------------------------------
 
 
-@app.route("/api/voices")
-async def app_voices() -> Response:
-    """Get available voices."""
-    languages = set(request.args.getlist("language"))
-    locales = set(request.args.getlist("locale"))
-    genders = set(request.args.getlist("gender"))
-    tts_names = set(request.args.getlist("tts_name"))
+#@app.route("/api/voices")
+#async def app_voices() -> Response:
+#    """Get available voices."""
+#    languages = set(request.args.getlist("language"))
+#    locales = set(request.args.getlist("locale"))
+#    genders = set(request.args.getlist("gender"))
+#    tts_names = set(request.args.getlist("tts_name"))
 
-    voices: typing.Dict[str, typing.Any] = {}
-    for tts_name, tts in _TTS.items():
-        if tts_names and (tts_name not in tts_names):
+#   voices: typing.Dict[str, typing.Any] = {}
+#    for tts_name, tts in _TTS.items():
+#        if tts_names and (tts_name not in tts_names):
             # Skip TTS
-            continue
+#            continue
 
-        async for voice in tts.voices():
-            if languages and (voice.language not in languages):
+ #       async for voice in tts.voices():
+ #           if languages and (voice.language not in languages):
                 # Skip language
-                continue
+ #               continue
 
-            if locales and (voice.locale not in locales):
+  #          if locales and (voice.locale not in locales):
                 # Skip locale
-                continue
+   #             continue
 
-            if genders and (voice.gender not in genders):
+    #        if genders and (voice.gender not in genders):
                 # Skip gender
-                continue
+     #           continue
 
             # Prepend TTS system name to voice ID
-            full_id = f"{tts_name}:{voice.id}"
-            voices[full_id] = dataclasses.asdict(voice)
+      #      full_id = f"{tts_name}:{voice.id}"
+       #     voices[full_id] = dataclasses.asdict(voice)
 
             # Add TTS name
-            voices[full_id]["tts_name"] = tts_name
+        #    voices[full_id]["tts_name"] = tts_name
 
-    return jsonify(voices)
+   # return jsonify(voices)
 
 
-@app.route("/api/languages")
-async def app_languages() -> Response:
-    """Get available languages."""
-    tts_names = set(request.args.getlist("tts_name"))
-    languages: typing.Set[str] = set()
+#@app.route("/api/languages")
+#async def app_languages() -> Response:
+ #   """Get available languages."""
+ #   tts_names = set(request.args.getlist("tts_name"))
+ #   languages: typing.Set[str] = set()
 
-    for tts_name, tts in _TTS.items():
-        if tts_names and (tts_name not in tts_names):
+  #  for tts_name, tts in _TTS.items():
+   #     if tts_names and (tts_name not in tts_names):
             # Skip TTS
-            continue
+    #        continue
 
-        async for voice in tts.voices():
-            languages.add(voice.language)
+    #    async for voice in tts.voices():
+    #        languages.add(voice.language)
 
-    return jsonify(list(languages))
+    #return jsonify(list(languages))
 
 
 def convert_bool(bool_str: str) -> bool:
@@ -663,9 +663,17 @@ def convert_bool(bool_str: str) -> bool:
     return bool_str.strip().lower() in {"true", "yes", "on", "1", "enable"}
 
 
-@app.route("/api/tts", methods=["GET", "POST"])
+@app.route("/api/sergtts", methods=["GET", "POST"])
 async def app_say() -> Response:
     """Speak text to WAV."""
+
+ # 1. Get the API key from the request header
+    api_key = request.headers.get("Authorization")
+
+    # 2. Check if the API key is valid
+    if not api_key or api_key != f"Bearer abcc55b3-a911-4f4a-8f8a-193422287ee6":
+        return jsonify({"error": "Invalid or missing API key"}), 401
+    
     lang = request.args.get("lang", "en")
 
     voice = request.args.get("voice", "")
