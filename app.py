@@ -780,51 +780,51 @@ def resolve_voice(voice: str, fallback_voice: typing.Optional[str] = None) -> st
 # -----------------------------------------------------------------------------
 
 # MaryTTS compatibility layer
-@app.route("/process", methods=["GET", "POST"])
-async def api_process():
-    """MaryTTS-compatible /process endpoint"""
-    if request.method == "POST":
-        data = parse_qs((await request.data).decode())
-        text = data.get("INPUT_TEXT", [""])[0]
-        voice = data.get("VOICE", [""])[0]
-    else:
-        text = request.args.get("INPUT_TEXT", "")
-        voice = request.args.get("VOICE", "")
+#@app.route("/process", methods=["GET", "POST"])
+#async def api_process():
+#    """MaryTTS-compatible /process endpoint"""
+#    if request.method == "POST":
+#        data = parse_qs((await request.data).decode())
+#        text = data.get("INPUT_TEXT", [""])[0]
+#        voice = data.get("VOICE", [""])[0]
+#    else:
+#        text = request.args.get("INPUT_TEXT", "")
+#        voice = request.args.get("VOICE", "")
 
     # <VOICE>;<VOCODER>
-    vocoder: typing.Optional[str] = args.larynx_quality
-    if ";" in voice:
-        voice, vocoder = voice.split(";", maxsplit=1)
+#    vocoder: typing.Optional[str] = args.larynx_quality
+#    if ";" in voice:
+#        voice, vocoder = voice.split(";", maxsplit=1)
 
-    wav_bytes = await text_to_wav(
-        text,
-        voice,
-        vocoder=vocoder,
-        denoiser_strength=args.larynx_denoiser_strength,
-        noise_scale=args.larynx_noise_scale,
-        length_scale=args.larynx_length_scale,
-    )
+#    wav_bytes = await text_to_wav(
+#        text,
+#        voice,
+#        vocoder=vocoder,
+#        denoiser_strength=args.larynx_denoiser_strength,
+#        noise_scale=args.larynx_noise_scale,
+#        length_scale=args.larynx_length_scale,
+#    )
 
-    return Response(wav_bytes, mimetype="audio/wav")
+#    return Response(wav_bytes, mimetype="audio/wav")
 
 
-@app.route("/voices", methods=["GET"])
-async def api_voices():
-    """MaryTTS-compatible /voices endpoint"""
-    voices = []
-    for tts_name, tts in _TTS.items():
-        async for voice in tts.voices():
+#@app.route("/voices", methods=["GET"])
+#async def api_voices():
+#    """MaryTTS-compatible /voices endpoint"""
+#    voices = []
+#    for tts_name, tts in _TTS.items():
+#        async for voice in tts.voices():
             # Prepend TTS system name to voice ID
-            full_id = f"{tts_name}:{voice.id}"
-            voices.append(full_id)
+#            full_id = f"{tts_name}:{voice.id}"
+#            voices.append(full_id)
 
-    return "\n".join(voices)
+ #   return "\n".join(voices)
 
 
-@app.route("/version", methods=["GET"])
-async def api_version():
-    """MaryTTS-compatible /version endpoint"""
-    return _VERSION
+#@app.route("/version", methods=["GET"])
+#async def api_version():
+#    """MaryTTS-compatible /version endpoint"""
+#    return _VERSION
 
 
 # -----------------------------------------------------------------------------
@@ -833,22 +833,22 @@ async def api_version():
 
 
 
-@app.route("/css/<path:filename>", methods=["GET"])
-async def css(filename) -> Response:
-    """CSS static endpoint."""
-    return await send_from_directory("css", filename)
+#@app.route("/css/<path:filename>", methods=["GET"])
+#async def css(filename) -> Response:
+#    """CSS static endpoint."""
+#    return await send_from_directory("css", filename)
 
 
-@app.route("/js/<path:filename>", methods=["GET"])
-async def js(filename) -> Response:
-    """Javascript static endpoint."""
-    return await send_from_directory("js", filename)
+#@app.route("/js/<path:filename>", methods=["GET"])
+#async def js(filename) -> Response:
+#    """Javascript static endpoint."""
+#    return await send_from_directory("js", filename)
 
 
-@app.route("/img/<path:filename>", methods=["GET"])
-async def img(filename) -> Response:
-    """Image static endpoint."""
-    return await send_from_directory("img", filename)
+#@app.route("/img/<path:filename>", methods=["GET"])
+#async def img(filename) -> Response:
+#    """Image static endpoint."""
+#    return await send_from_directory("img", filename)
 
 
 
